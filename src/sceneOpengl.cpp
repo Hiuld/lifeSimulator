@@ -108,8 +108,6 @@ void sceneOpengl::deplaceSommets(double* sommets, int nbSommets, glm::vec2 trans
 
 void sceneOpengl::bouclePrincipale(){
 
-
-
     bool terminer(false);
 
     showMat4Coords(viewPosNZoomMatrix);
@@ -118,15 +116,14 @@ void sceneOpengl::bouclePrincipale(){
 
     showMat4Coords(viewPosNZoomMatrix);
 
-    viewPosNZoomMatrix = glm::rotate( viewPosNZoomMatrix, static_cast<float>(45.0*(static_cast<double>(M_PI) / 180.0 )), glm::vec3(0.0,0.0,1.0) );
-
-    showMat4Coords(viewPosNZoomMatrix);
-
     Quadrilatere carre(glm::mat2(0.0, 0.0, 10.0, 10.0), glm::vec2(0), 0xFF00CEFF);
     carre.setShaders("Shaders/projection2D.vert", "Shaders/couleur2D.frag");
+    Quadrilatere carre2(glm::mat2(0.0, 0.0, 10.0, 10.0), glm::vec2(0), 0xFF00CEFF);
+    carre2.setShaders("Shaders/projection2D.vert", "Shaders/couleur2D.frag");
 
     //viewPosNZoomMatrix = glm::scale(viewPosNZoomMatrix, glm::vec3(100.0));
-
+    carre2.setPosition(glm::vec2(0, 0));
+    carre.setPosition(glm::vec2(50, 50));
     while(!terminer){
 
 
@@ -141,8 +138,16 @@ void sceneOpengl::bouclePrincipale(){
         glClear(GL_COLOR_BUFFER_BIT);
 
         // on affiche le quad
+
+
+        carre2.afficher(projection, viewPosNZoomMatrix);
+        carre2.tournerDeg(1);
+        carre2.deplacer(glm::vec2(1.0, 0.0));
+
+
         carre.afficher(projection, viewPosNZoomMatrix);
-        //carre.tournerDeg(1);
+        carre.tournerDeg(1);
+        carre.deplacer(glm::vec2(1.0, 0.0));
 
         //draw2DScene(vertices, 0, 12, verticesColor, shaderBasique.getProgramID());
 

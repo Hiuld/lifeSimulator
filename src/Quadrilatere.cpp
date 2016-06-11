@@ -2,6 +2,7 @@
 
 Quadrilatere::Quadrilatere()
 {
+    init();
     glm::mat2 matrice( -0.5, -0.5, 0.5, 0.5);
 
     this->m_sommets[0] = matrice[0][0];
@@ -12,19 +13,11 @@ Quadrilatere::Quadrilatere()
     this->m_sommets[5] = matrice[1][1];
     this->m_sommets[6] = matrice[1][0];
     this->m_sommets[7] = matrice[0][1];
-
-    for(int i = 0; i < 4; i++){
-        std::cout << "[ " << m_sommets[i*2] << " ]\t" << "[ " << m_sommets[(i*2)+1] << " ]" << std::endl;
-    }
-    std::cout << std::endl;
-
-    this->m_position = glm::vec2(0);
-    ARGBConvertion(0xFFFFFFFF);
-
 }
 
 Quadrilatere::Quadrilatere(double taille, glm::vec2 position = glm::vec2(0), int argb = 0xFFFFFFFF)
 {
+    init();
     glm::mat2 matrice( -0.5 * taille, -0.5 * taille, 0.5 * taille, 0.5 * taille );
 
     this->m_sommets[0] = matrice[0][0];
@@ -36,79 +29,97 @@ Quadrilatere::Quadrilatere(double taille, glm::vec2 position = glm::vec2(0), int
     this->m_sommets[6] = matrice[1][0];
     this->m_sommets[7] = matrice[0][1];
 
-    this->m_position = position;
+    this->m_position = glm::mat4(1.0, 0.0, 0.0, position.x,
+                                 0.0, 1.0, 0.0, position.y,
+                                 0.0, 0.0, 1.0, 0.0,
+                                 0.0, 0.0, 0.0, 1.0);
     ARGBConvertion(argb);
-
-    for(int i = 0; i < 4; i++){
-        std::cout << "[ " << m_sommets[i*2] << " ]\t" << "[ " << m_sommets[(i*2)+1] << " ]" << std::endl;
-    }
-    std::cout << std::endl;
-    std::cout << "pos : " << m_position.x << ", " << m_position.y << std::endl;
-    std::cout << "argb : " << m_argb[0] << ", " << m_argb[1] << ", " << m_argb[2] << ", " << m_argb[3] << " : " << argb << std::endl;
-    std::cout << std::endl;
 }
 
 Quadrilatere::Quadrilatere(glm::mat2 matrice, glm::vec2 position = glm::vec2(0), int argb = 0xFFFFFFFF)
 {
-    this->m_sommets[0] = matrice[0][0];
-    this->m_sommets[1] = matrice[0][1];
-    this->m_sommets[2] = matrice[0][0];
-    this->m_sommets[3] = matrice[1][1];
-    this->m_sommets[4] = matrice[1][0];
-    this->m_sommets[5] = matrice[1][1];
-    this->m_sommets[6] = matrice[1][0];
-    this->m_sommets[7] = matrice[0][1];
+    init();
+    this->m_sommets[0] = (matrice[0][0] - matrice[1][0])/2;
+    this->m_sommets[1] = (matrice[0][1] - matrice[1][0])/2;
+    this->m_sommets[2] = (matrice[0][0] - matrice[1][0])/2;
+    this->m_sommets[3] = (matrice[1][1] - matrice[0][1])/2;
+    this->m_sommets[4] = (matrice[1][0] - matrice[0][0])/2;
+    this->m_sommets[5] = (matrice[1][1] - matrice[0][1])/2;
+    this->m_sommets[6] = (matrice[1][0] - matrice[0][1])/2;
+    this->m_sommets[7] = (matrice[0][1] - matrice[1][1])/2;
 
-    this->m_position = position;
+    this->m_position = glm::mat4(1.0, 0.0, 0.0, position.x,
+                                 0.0, 1.0, 0.0, position.y,
+                                 0.0, 0.0, 1.0, 0.0,
+                                 0.0, 0.0, 0.0, 1.0);
     ARGBConvertion(argb);
+}
 
-    for(int i = 0; i < 4; i++){
-        std::cout << "[ " << m_sommets[i*2] << " ]\t" << "[ " << m_sommets[(i*2)+1] << " ]" << std::endl;
-    }
-    std::cout << std::endl;
-    std::cout << "pos : " << m_position.x << ", " << m_position.y << std::endl;
-    std::cout << "argb : " << m_argb[0] << ", " << m_argb[1] << ", " << m_argb[2] << ", " << m_argb[3] << " : " << argb << std::endl;
-    std::cout << std::endl;
+Quadrilatere::Quadrilatere(glm::mat4x2 matrice, glm::vec2 position = glm::vec2(0), int argb = 0xFFFFFFFF)
+{
+    init();
+    this->m_sommets[0] = (matrice[0][0] - matrice[0][1])/2;
+    this->m_sommets[1] = (matrice[0][2] - matrice[0][3])/2;
+    this->m_sommets[2] = (matrice[0][0] - matrice[1][0])/2;
+    this->m_sommets[3] = (matrice[1][1] - matrice[0][1])/2;
+    this->m_sommets[4] = (matrice[1][0] - matrice[0][0])/2;
+    this->m_sommets[5] = (matrice[1][1] - matrice[0][1])/2;
+    this->m_sommets[6] = (matrice[1][0] - matrice[0][1])/2;
+    this->m_sommets[7] = (matrice[0][1] - matrice[1][1])/2;
+
+    this->m_position = glm::mat4(1.0, 0.0, 0.0, position.x,
+                                 0.0, 1.0, 0.0, position.y,
+                                 0.0, 0.0, 1.0, 0.0,
+                                 0.0, 0.0, 0.0, 1.0);
+    ARGBConvertion(argb);
 }
 
 Quadrilatere::Quadrilatere(double* sommets, glm::vec2 position = glm::vec2(0), int argb = 0xFFFFFFFF)
 {
+    init();
     for(int i = 0; i < 8; i++){
         this->m_sommets[i] = sommets[i];
     }
-    this->m_position = position;
+    this->m_position = glm::mat4(1.0, 0.0, 0.0, position.x,
+                                 0.0, 1.0, 0.0, position.y,
+                                 0.0, 0.0, 1.0, 0.0,
+                                 0.0, 0.0, 0.0, 1.0);
     ARGBConvertion(argb);
+}
 
-    for(int i = 0; i < 4; i++){
-        std::cout << "[ " << m_sommets[i*2] << " ]\t" << "[ " << m_sommets[(i*2)+1] << " ]" << std::endl;
-    }
-    std::cout << "pos : " << m_position.x << ", " << m_position.y << std::endl;
-    std::cout << "argb : " << m_argb[0] << ", " << m_argb[1] << ", " << m_argb[2] << ", " << m_argb[3] << " : " << argb << std::endl;
-    std::cout << std::endl;
+void Quadrilatere::init()
+{
+    m_deplacement = glm::mat4(0.0);
+    m_position = glm::mat4(0.0);
+    ARGBConvertion(0xFFFFFFFF);
 }
 
 void Quadrilatere::deplacer(glm::vec2 depl)
 {
-    m_position += depl;
+    m_position[0][3] += depl.x;
+    m_position[1][3] += depl.y;
 }
 
 void Quadrilatere::tournerRad(double angle)
 {
     m_angleRad += angle;
     double junk;
-    m_angleRad = modf(angle / M_2PI, &junk) * M_2PI ;
+    m_angleRad = modf(m_angleRad / M_2PI, &junk) * M_2PI ;
 }
 
 void Quadrilatere::tournerDeg(double angle)
 {
-    m_angleRad += (angle * (static_cast<double>(M_PI) / 180.0 ));
+    m_angleRad += (angle * M_PI_180);
     double junk;
-    m_angleRad = modf(angle / M_2PI, &junk) * M_2PI ;
+    m_angleRad = modf(m_angleRad / M_2PI, &junk) * M_2PI ;
 }
 
 void Quadrilatere::setPosition(glm::vec2 pos)
 {
-    m_position = pos;
+    this->m_position = glm::mat4(1.0, 0.0, 0.0, pos.x,
+                                 0.0, 1.0, 0.0, pos.y,
+                                 0.0, 0.0, 1.0, 0.0,
+                                 0.0, 0.0, 0.0, 1.0);
 }
 
 void Quadrilatere::setAngleRad(double angle)
@@ -143,15 +154,19 @@ void Quadrilatere::afficher(glm::mat4 projection, glm::mat4 viewPosNZoomMatrix)
 // on active le shader voulu
     glUseProgram(m_shader.getProgramID());
 
-
-
     std::cout << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl
          << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl << std::endl;
-    /*
+
     for(int i = 0; i < 4; i++){
         std::cout << "[ " << m_sommets[i*2] << " ]\t" << "[ " << m_sommets[(i*2)+1] << " ]" << std::endl;
+
     }
-    */
+    std::cout << "r[ " << m_angleRad << " ]" << std::endl;
+    std::cout << "d[ " << m_position[0][0] << " ]" << "[ " << m_position[0][1] << "][ " << m_position[0][2] << "][ " << m_position[0][3] << " ]" << std::endl;
+    std::cout << "d[ " << m_position[1][0] << " ]" << "[ " << m_position[1][1] << "][ " << m_position[1][2] << "][ " << m_position[1][3] << " ]" << std::endl;
+    std::cout << "d[ " << m_position[2][0] << " ]" << "[ " << m_position[2][1] << "][ " << m_position[2][2] << "][ " << m_position[2][3] << " ]" << std::endl;
+    std::cout << "d[ " << m_position[3][0] << " ]" << "[ " << m_position[3][1] << "][ " << m_position[3][2] << "][ " << m_position[3][3] << " ]" << std::endl;
+    /*
     std::cout << "pos : " << m_position.x << ", " << m_position.y << std::endl
         << "argb : " << m_argb[0] << ", " << m_argb[1] << ", " << m_argb[2] << ", " << m_argb[3] << std::endl
         << "M_PI        : " << M_PI << std::endl
@@ -166,6 +181,7 @@ void Quadrilatere::afficher(glm::mat4 projection, glm::mat4 viewPosNZoomMatrix)
         << "W_PI  / 180 : 0.01745329251994329576923690768489" << std::endl
         << "M_PI_180    : " << M_PI_180 << std::endl
         << std::endl;
+    */
 
     SDL_Delay(0.16666666666666666666);
 
@@ -192,21 +208,31 @@ void Quadrilatere::afficher(glm::mat4 projection, glm::mat4 viewPosNZoomMatrix)
         1,
         GL_FALSE,
         glm::value_ptr(
-            projection
+            projection * viewPosNZoomMatrix
         )
     );
     glUniformMatrix4fv(
         glGetUniformLocation(
             m_shader.getProgramID(),
-            "viewPosNZoomMatrix"
+            "direction"
         ),
         1,
         GL_FALSE,
         glm::value_ptr(
-            viewPosNZoomMatrix
+            glm::rotate(static_cast<float>(m_angleRad), G_Z_AXIS)
         )
     );
-
+    glUniformMatrix4fv(
+        glGetUniformLocation(
+            m_shader.getProgramID(),
+            "position"
+        ),
+        1,
+        GL_FALSE,
+        glm::value_ptr(
+            m_position
+        )
+    );
 
     glDrawArrays(GL_QUADS, 0, 4);
 

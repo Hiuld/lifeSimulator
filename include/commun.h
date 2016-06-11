@@ -24,6 +24,8 @@
 
     #endif
 
+    #define GLM_MESSAGES
+
     #include <glm/glm.hpp>
     #include <glm/gtx/transform.hpp>
     #include <glm/gtc/type_ptr.hpp>
@@ -37,8 +39,16 @@
     #include <vector>
     #include <time.h>
 
-    #define M_2PI       6.2831853071795864769252867664
-    #define M_PI_180    0,0174532925199432957692369076
-    #define M_180_PI    57,295779513082320876798154814
+    namespace {
+        const double M_2PI = 6.2831853071795864769252867664;
+        const double M_PI_180 = 0.0174532925199432957692369076;
+        const double M_180_PI = 57.295779513082320876798154814;
+        const glm::vec3 G_X_AXIS = glm::vec3(1.0, 0.0, 0.0);
+        const glm::vec3 G_Y_AXIS = glm::vec3(0.0, 1.0, 0.0);
+        const glm::vec3 G_Z_AXIS = glm::vec3(0.0, 0.0, 1.0);
+        const glm::vec3 G_mX_AXIS = glm::vec3(-1.0, 0.0, 0.0);
+        const glm::vec3 G_mY_AXIS = glm::vec3(0.0, -1.0, 0.0);
+        const glm::vec3 G_mZ_AXIS = glm::vec3(0.0, 0.0, -1.0);
+    };
 
 #endif
